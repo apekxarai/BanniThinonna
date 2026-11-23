@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+
+{% block title %}Namkeens | BanniThinonna{% endblock %}
+
+{% block content %}
+
+<style>
+
+.namkeen-page {
+    background: #fffaf6;
+    padding: 40px 5% 70px;
+    min-height: 80vh;
+}
+
+.namkeen-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.namkeen-header h1 {
+    font-family: Georgia, serif;
+    color: #70432f;
+    font-size: 38px;
+    margin-bottom: 12px;
+}
+
+.namkeen-header p {
+    color: #927c70;
+    font-size: 15px;
+}
+
+/* CATEGORY FILTER */
+
+.namkeen-filters {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 35px;
+}
+
+.filter-btn {
+    padding: 10px 22px;
+    border: 1px solid #8b4935;
+    background: white;
+    color: #8b4935;
+    border-radius: 25px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: #8b4935;
+    color: white;
+}
+
+/* PRODUCT GRID */
+
+.namkeen-grid {
+    max-width: 1250px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+.namkeen-card {
+    background: white;
+    border-radius: 13px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+    transition: 0.3s;
+}
+
+.namkeen-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+}
+
+.namkeen-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    background: #f5e7dc;
+}
+
+.namkeen-card-content {
+    padding: 18px;
+}
+
+.namkeen-category {
+    display: inline-block;
+    background: #f8e9de;
+    color: #8b4935;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.namkeen-card h3 {
+    color: #70432f;
+    font-family: Georgia, serif;
+    font-size: 21px;
+    margin-bottom: 10px;
+}
+
+.namkeen-description {
+    color: #888;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    min-height: 42px;
+}
+
+.namkeen-price {
+    color: #914b35;
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.namkeen-view {
+    display: block;
+    text-align: center;
+    background: #8b4935;
+    color: white;
+    padding: 12px;
+    border-radius: 7px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.namkeen-view:hover {
+    background: #70432f;
+}
+
+/* EMPTY MESSAGE */
+
+.no-namkeens {
+    text-align: center;
+    color: #927c70;
+    grid-column: 1 / -1;
+    padding: 50px;
+    font-size: 17px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 1000px) {
+    .namkeen-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media(max-width: 750px) {
+    .namkeen-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .namkeen-header h1 {
+        font-size: 30px;
+    }
+}
+
+@media(max-width: 500px) {
+    .namkeen-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+
+
+<div class="namkeen-page">
+
+    <!-- PAGE HEADER -->
+
+    <div class="namkeen-header">
+
+        <h1>Our Delicious Namkeens</h1>
+
+        <p>
+            Enjoy the authentic taste of traditional Indian snacks.
+            Freshly prepared with love!
+        </p>
+
+    </div>
+
+
+    <!-- CATEGORY FILTER -->
+
+    <div class="namkeen-filters">
+
+        <a href="{% url 'namkeens' %}"
+           class="filter-btn {% if not selected_category %}active{% endif %}">
+            All Namkeens
+        </a>
+
+        {% for value, label in categories %}
+
+            <a href="?category={{ value|urlencode }}"
+               class="filter-btn {% if selected_category == value %}active{% endif %}">
+                {{ label }}
+            </a>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- NAMKEEN PRODUCTS -->
+
+    <div class="namkeen-grid">
+
+        {% for namkeen in namkeens %}
+
+            <div class="namkeen-card">
+
+                {% if namkeen.image %}
+
+                    <img
+                        src="{{ namkeen.image.url }}"
+                        alt="{{ namkeen.name }}"
+                        class="namkeen-image"
+                    >
+
+                {% else %}
+
+                    <div class="namkeen-image"
+                         style="display:flex;align-items:center;justify-content:center;font-size:55px;">
+                        🥨
+                    </div>
+
+                {% endif %}
+
+
+                <div class="namkeen-card-content">
+
+                    <span class="namkeen-category">
+                        {{ namkeen.get_category_display }}
+                    </span>
+
+                    <h3>{{ namkeen.name }}</h3>
+
+                    <p class="namkeen-description">
+                        {{ namkeen.description|truncatewords:12 }}
+                    </p>
+
+                    <div class="namkeen-price">
+                        ₹{{ namkeen.price_per_kg }} / kg
+                    </div>
+
+                    <a href="{% url 'namkeen_detail' namkeen.id %}"
+                       class="namkeen-view">
+                        View Details →
+                    </a>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="no-namkeens">
+                <h3>No Namkeens Available</h3>
+                <p>Please check back later!</p>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

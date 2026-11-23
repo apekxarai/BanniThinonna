@@ -1,0 +1,499 @@
+{% extends 'base.html' %}
+
+{% block title %}Delicious Cakes | BanniThinonna{% endblock %}
+
+{% block content %}
+
+<style>
+
+/* MAIN PAGE */
+
+.cakes-page {
+    background: #fffaf6;
+    padding: 45px 5% 70px;
+    min-height: 65vh;
+}
+
+/* PAGE HEADING */
+
+.cakes-heading {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.cakes-heading h1 {
+    font-family: Georgia, serif;
+    font-size: 38px;
+    color: #70432f;
+    margin-bottom: 12px;
+}
+
+.cakes-heading p {
+    color: #927c70;
+}
+
+/* CAKE GRID */
+
+.cakes-grid {
+    max-width: 1150px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+/* CAKE CARD */
+
+.cake-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    background: white;
+    padding: 15px;
+    border-radius: 13px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.cake-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.09);
+}
+
+/* CAKE IMAGE */
+
+.cake-card-image {
+    width: 115px;
+    height: 115px;
+    min-width: 115px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.no-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5e7dc;
+    font-size: 35px;
+}
+
+/* CAKE DETAILS */
+
+.cake-card-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.cake-name {
+    color: #70432f;
+    font-family: Georgia, serif;
+    font-size: 21px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-bottom: 7px;
+}
+
+.cake-name:hover {
+    color: #a45f45;
+}
+
+.cake-category {
+    display: inline-block;
+    width: fit-content;
+    background: #f8e9de;
+    color: #8b4935;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.cake-description {
+    color: #888;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+/* BUTTONS */
+
+.cake-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.cart-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 7px;
+    background: #8b4935;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cart-btn:hover {
+    background: #70432f;
+}
+
+.wishlist-btn {
+    width: 42px;
+    min-width: 42px;
+    border: 1px solid #8b4935;
+    border-radius: 7px;
+    background: white;
+    color: #8b4935;
+    font-size: 19px;
+    cursor: pointer;
+}
+
+.wishlist-btn:hover {
+    background: #f8e9e2;
+}
+
+/* EMPTY PRODUCTS */
+
+.no-cakes {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #80695e;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 900px) {
+    .cakes-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 600px) {
+    .cakes-heading h1 {
+        font-size: 30px;
+    }
+}
+
+@media(max-width: 450px) {
+    .cake-card {
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .cake-card-image {
+        width: 90px;
+        height: 100px;
+        min-width: 90px;
+    }
+
+    .cake-name {
+        font-size: 18px;
+    }
+
+    .cake-description {
+        font-size: 12px;
+    }
+
+    .cart-btn {
+        font-size: 12px;
+        padding: 9px 5px;
+    }
+}
+
+</style>
+
+
+<!-- CAKES PAGE -->
+
+<div class="cakes-page">
+
+    <!-- HEADING -->
+
+    <div class="cakes-heading">
+
+        <h1>Our Delicious Cakes</h1>
+
+        <p>
+            Celebrate every moment with our freshly prepared cakes.
+        </p>
+
+    </div>
+
+
+    <!-- CAKE PRODUCTS -->
+
+    <div class="cakes-grid">
+
+        {% for cake in cakes %}
+
+        <div class="cake-card">
+
+            <!-- CAKE IMAGE -->
+
+            <a href="{% url 'cake_detail' cake.id %}">
+
+                {% if cake.image %}
+
+                    <img
+                        src="{{ cake.image }}"
+                        alt="{{ cake.name }}"
+                        class="cake-card-image"
+                    >
+
+                {% else %}
+
+                    <div class="cake-card-image no-image">
+                        🎂
+                    </div>
+
+                {% endif %}
+
+            </a>
+
+
+            <!-- CAKE DETAILS -->
+
+            <div class="cake-card-content">
+
+                <a
+                    class="cake-name"
+                    href="{% url 'cake_detail' cake.id %}"
+                >
+                    {{ cake.name }}
+                </a>
+
+
+                <!-- CATEGORY -->
+
+                <span class="cake-category">
+                    {{ cake.get_category_display }}
+                </span>
+
+
+                <!-- DESCRIPTION -->
+
+                <p class="cake-description">
+                    {{ cake.description }}
+                </p>
+
+
+                <!-- PRICE -->
+
+                <p style="color:#914b35;font-weight:bold;margin-bottom:10px;">
+                    ₹{{ cake.price_per_kg }} / kg
+                </p>
+
+
+                <!-- CART AND WISHLIST -->
+
+                <div class="cake-actions">
+
+                    <button
+                        class="cart-btn"
+                        type="button"
+                        onclick="addCakeToCart(this)"
+                        data-id="{{ cake.id }}"
+                        data-name="{{ cake.name }}"
+                        data-price="{{ cake.price_per_kg }}"
+                        data-image="{{ cake.image }}"
+                        data-category="{{ cake.category }}"
+                    >
+                        🛒 Add to Cart
+                    </button>
+
+
+                    <button
+                        class="wishlist-btn"
+                        type="button"
+                        onclick="addCakeToWishlist(this)"
+                        data-id="{{ cake.id }}"
+                        data-name="{{ cake.name }}"
+                        data-price="{{ cake.price_per_kg }}"
+                        data-image="{{ cake.image }}"
+                        data-category="{{ cake.category }}"
+                        title="Add to Wishlist"
+                    >
+                        ♡
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% empty %}
+
+        <div class="no-cakes">
+
+            <h2>No Cakes Available Yet!</h2>
+
+            <p>
+                Please add cakes through Django Admin.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+// GET CAKE DETAILS
+
+function getCakeData(button) {
+
+    return {
+
+        id: button.dataset.id,
+
+        name: button.dataset.name,
+
+        price: Number(button.dataset.price),
+
+        price_per_kg: Number(button.dataset.price),
+
+        weight: 1000,
+
+        image: button.dataset.image,
+
+        category: button.dataset.category
+
+    };
+
+}
+
+
+// ADD TO CART
+
+function addCakeToCart(button) {
+
+    let product = getCakeData(button);
+
+    let cart = JSON.parse(
+        localStorage.getItem("bakeryCart")
+    ) || [];
+
+
+    let existing = cart.find(item =>
+        String(item.id) === String(product.id) &&
+        Number(item.weight) === 1000
+    );
+
+
+    if (existing) {
+
+        existing.quantity += 1;
+
+    } else {
+
+        cart.push({
+            ...product,
+            quantity: 1
+        });
+
+    }
+
+
+    localStorage.setItem(
+        "bakeryCart",
+        JSON.stringify(cart)
+    );
+
+
+    alert(product.name + " added to cart!");
+
+    updateCakeHeaderCounts();
+
+}
+
+
+// ADD TO WISHLIST
+
+function addCakeToWishlist(button) {
+
+    let product = getCakeData(button);
+
+    let wishlist = JSON.parse(
+        localStorage.getItem("bakeryWishlist")
+    ) || [];
+
+
+    let existing = wishlist.find(item =>
+        String(item.id) === String(product.id) &&
+        item.category === product.category
+    );
+
+
+    if (existing) {
+
+        alert("Already in your wishlist!");
+
+        return;
+
+    }
+
+
+    wishlist.push(product);
+
+
+    localStorage.setItem(
+        "bakeryWishlist",
+        JSON.stringify(wishlist)
+    );
+
+
+    alert(product.name + " added to wishlist!");
+
+    updateCakeHeaderCounts();
+
+}
+
+
+// UPDATE HEADER COUNTS
+
+function updateCakeHeaderCounts() {
+
+    let cart = JSON.parse(
+        localStorage.getItem("bakeryCart")
+    ) || [];
+
+    let wishlist = JSON.parse(
+        localStorage.getItem("bakeryWishlist")
+    ) || [];
+
+
+    let cartCount = cart.reduce(
+        (total, item) => total + (Number(item.quantity) || 1), 0
+    );
+
+
+    let cartElement = document.getElementById("cartCount");
+
+    let wishlistElement = document.getElementById("wishlistCount");
+
+
+    if (cartElement) {
+        cartElement.textContent = cartCount;
+    }
+
+    if (wishlistElement) {
+        wishlistElement.textContent = wishlist.length;
+    }
+
+}
+
+</script>
+
+{% endblock %}
