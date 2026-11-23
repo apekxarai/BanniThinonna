@@ -15,7 +15,6 @@
     min-height: 65vh;
 }
 
-
 /* PAGE HEADING */
 
 .sweets-heading {
@@ -34,6 +33,33 @@
     color: #927c70;
 }
 
+/* SWEET CATEGORY FILTERS */
+
+.sweet-filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 45px 0 60px;
+}
+
+.sweet-filter {
+    padding: 14px 28px;
+    border: 1px solid #914d36;
+    border-radius: 30px;
+    background: transparent;
+    color: #914d36;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.sweet-filter:hover,
+.sweet-filter.active {
+    background: #914d36;
+    color: white;
+}
 
 /* SWEETS GRID */
 
@@ -44,7 +70,6 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 18px;
 }
-
 
 /* SWEET CARD */
 
@@ -63,7 +88,6 @@
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.09);
 }
-
 
 /* PRODUCT IMAGE */
 
@@ -88,7 +112,6 @@
     background: #f5e7dc;
     font-size: 35px;
 }
-
 
 /* PRODUCT DETAILS */
 
@@ -131,7 +154,6 @@
     margin-bottom: 12px;
 }
 
-
 /* BUTTONS */
 
 .sweet-actions {
@@ -170,7 +192,6 @@
     background: #f8e9e2;
 }
 
-
 /* EMPTY PRODUCTS */
 
 .no-sweets {
@@ -179,7 +200,6 @@
     padding: 60px 20px;
     color: #80695e;
 }
-
 
 /* RESPONSIVE DESIGN */
 
@@ -192,6 +212,11 @@
 @media(max-width: 600px) {
     .sweets-heading h1 {
         font-size: 30px;
+    }
+
+    .sweet-filter {
+        padding: 11px 20px;
+        font-size: 14px;
     }
 }
 
@@ -242,13 +267,51 @@
     </div>
 
 
+    <!-- SWEET CATEGORY FILTER BUTTONS -->
+
+    <div class="sweet-filters">
+
+        <button class="sweet-filter active"
+                type="button"
+                onclick="filterSweets(this, 'All')">
+            All Sweets
+        </button>
+
+        <button class="sweet-filter"
+                type="button"
+                onclick="filterSweets(this, 'Traditional')">
+            Traditional Sweets
+        </button>
+
+        <button class="sweet-filter"
+                type="button"
+                onclick="filterSweets(this, 'Milk Sweets')">
+            Milk Sweets
+        </button>
+
+        <button class="sweet-filter"
+                type="button"
+                onclick="filterSweets(this, 'Dry Fruits')">
+            Dry Fruit Sweets
+        </button>
+
+        <button class="sweet-filter"
+                type="button"
+                onclick="filterSweets(this, 'Festival')">
+            Festival Specials
+        </button>
+
+    </div>
+
+
     <!-- SWEETS PRODUCTS -->
 
     <div class="sweets-grid">
 
         {% for sweet in sweets %}
 
-            <div class="sweet-card">
+            <div class="sweet-card"
+                 data-category="{{ sweet.category }}">
 
                 <!-- PRODUCT IMAGE -->
 
@@ -362,6 +425,43 @@
 <!-- JAVASCRIPT -->
 
 <script>
+
+// FILTER SWEETS BY CATEGORY
+
+function filterSweets(button, category) {
+
+    const sweets = document.querySelectorAll('.sweet-card');
+
+    const buttons = document.querySelectorAll('.sweet-filter');
+
+    // UPDATE ACTIVE BUTTON
+
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    button.classList.add('active');
+
+    // FILTER PRODUCTS
+
+    sweets.forEach(sweet => {
+
+        const sweetCategory = sweet.dataset.category;
+
+        if (category === 'All' || sweetCategory === category) {
+
+            sweet.style.display = 'flex';
+
+        } else {
+
+            sweet.style.display = 'none';
+
+        }
+
+    });
+
+}
+
 
 // GET SWEET DETAILS
 
