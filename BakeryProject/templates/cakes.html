@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block title %}Delicious Cakes | BanniThinonna{% endblock %}
@@ -30,6 +31,34 @@
 
 .cakes-heading p {
     color: #927c70;
+}
+
+/* CAKE CATEGORY FILTERS */
+
+.cake-filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 45px 0 60px;
+}
+
+.cake-filter {
+    padding: 14px 28px;
+    border: 1px solid #914d36;
+    border-radius: 30px;
+    background: transparent;
+    color: #914d36;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cake-filter:hover,
+.cake-filter.active {
+    background: #914d36;
+    color: white;
 }
 
 /* CAKE GRID */
@@ -176,6 +205,11 @@
     .cakes-heading h1 {
         font-size: 30px;
     }
+
+    .cake-filter {
+        padding: 11px 20px;
+        font-size: 14px;
+    }
 }
 
 @media(max-width: 450px) {
@@ -224,13 +258,51 @@
     </div>
 
 
+    <!-- CAKE CATEGORY FILTER BUTTONS -->
+
+    <div class="cake-filters">
+
+        <button class="cake-filter active"
+                type="button"
+                onclick="filterCakes(this, 'All')">
+            All Cakes
+        </button>
+
+        <button class="cake-filter"
+                type="button"
+                onclick="filterCakes(this, 'Birthday')">
+            Birthday Cakes
+        </button>
+
+        <button class="cake-filter"
+                type="button"
+                onclick="filterCakes(this, 'Chocolate')">
+            Chocolate Cakes
+        </button>
+
+        <button class="cake-filter"
+                type="button"
+                onclick="filterCakes(this, 'Wedding')">
+            Wedding Cakes
+        </button>
+
+        <button class="cake-filter"
+                type="button"
+                onclick="filterCakes(this, 'Special')">
+            Special Cakes
+        </button>
+
+    </div>
+
+
     <!-- CAKE PRODUCTS -->
 
     <div class="cakes-grid">
 
         {% for cake in cakes %}
 
-        <div class="cake-card">
+        <div class="cake-card"
+             data-category="{{ cake.category }}">
 
             <!-- CAKE IMAGE -->
 
@@ -349,6 +421,43 @@
 <!-- JAVASCRIPT -->
 
 <script>
+
+// FILTER CAKES BY CATEGORY
+
+function filterCakes(button, category) {
+
+    const cakes = document.querySelectorAll('.cake-card');
+
+    const buttons = document.querySelectorAll('.cake-filter');
+
+    // Update active button
+
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    button.classList.add('active');
+
+    // Filter products
+
+    cakes.forEach(cake => {
+
+        const cakeCategory = cake.dataset.category;
+
+        if (category === 'All' || cakeCategory === category) {
+
+            cake.style.display = 'flex';
+
+        } else {
+
+            cake.style.display = 'none';
+
+        }
+
+    });
+
+}
+
 
 // GET CAKE DETAILS
 
