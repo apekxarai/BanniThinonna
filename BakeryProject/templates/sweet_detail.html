@@ -442,7 +442,6 @@ document.getElementById("addDetailWishlist").addEventListener("click", function(
     );
 
     if (existing) {
-        alert("Already in your wishlist!");
         return;
     }
 
@@ -453,7 +452,6 @@ document.getElementById("addDetailWishlist").addEventListener("click", function(
         JSON.stringify(wishlist)
     );
 
-    alert(product.name + " added to wishlist!");
 });
 
 calculateSweetPrice();
