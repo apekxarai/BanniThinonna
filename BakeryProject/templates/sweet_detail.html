@@ -220,6 +220,11 @@
         grid-template-columns: 1fr;
     }
 }
+@media(max-width: 900px) {
+    .cakes-grid {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 
 
@@ -423,7 +428,6 @@ document.getElementById("addDetailCart").addEventListener("click", function() {
 
     localStorage.setItem("bakeryCart", JSON.stringify(cart));
 
-    alert(product.name + " added to cart!");
 });
 
 document.getElementById("addDetailWishlist").addEventListener("click", function() {
